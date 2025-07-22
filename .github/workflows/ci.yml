@@ -1,6 +1,11 @@
 name: Generate bindings
 
-on: [push,]
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to build, leave empty for latest"
+        required: false
 
 jobs:
   generate-bindings:
@@ -114,16 +119,6 @@ jobs:
           chmod +x ./generate_json.sh
           chmod +x $c2ffi
           ./generate_json.sh $c2ffi
-
-      - name: Generate Bindings
-        run: |
-          generator=GenerateBindings/bin/Release/net8.0/GenerateBindings
-
-          cd $GITHUB_WORKSPACE/main/
-          dotnet build GenerateBindings.sln -c Release
-
-          $generator $GITHUB_WORKSPACE/sdl3/
-          $generator $GITHUB_WORKSPACE/sdl3/ --core
 
       - name: Commit bindings
         run: |
